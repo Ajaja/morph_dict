@@ -98,7 +98,7 @@ TEST_CASE("check_punct") {
 
 TEST_CASE("check_gzip") {
     auto path = fs::path(__FILE__).parent_path() / "a.txt.gz";
-    gzFile file = gzopen(path.c_str(), "rb");
+	gzFile file = gzopen(path.string().c_str(), "rb");
     REQUIRE(file);
 
     char buffer[1024];
