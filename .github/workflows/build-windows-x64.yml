@@ -11,21 +11,25 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
-        submodules: recursive  # Crucial if plog or others are submodules
+        submodules: recursive
+        # This ensures the code is placed in a folder named 'morph_dict' 
+        # inside the workspace, making the paths predictable.
+        path: morph_dict
 
     - name: Install Dependencies via vcpkg
       run: vcpkg install zlib:x64-windows plog:x64-windows
 
     - name: Configure CMake
+      # We run cmake from the workspace root, pointing to the 'morph_dict' subdir
       run: >
-        cmake -B ${{github.workspace}}/build -A x64 
+        cmake -S morph_dict -B build -A x64 
         -DCMAKE_BUILD_TYPE=Release 
         -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
-        -DCMAKE_CXX_FLAGS="/I${{github.workspace}}" 
-        -DCMAKE_C_FLAGS="/I${{github.workspace}}"
+        -DCMAKE_CXX_FLAGS="/I ${{ github.workspace }}"
+        -DCMAKE_C_FLAGS="/I ${{ github.workspace }}"
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/build --config Release
+      run: cmake --build build --config Release
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
