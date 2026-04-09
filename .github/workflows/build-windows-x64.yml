@@ -1,8 +1,6 @@
 name: Build Windows x64
 
 on:
-  push:
-    branches: [ "main", "master" ]
   workflow_dispatch:
 
 jobs:
@@ -21,16 +19,14 @@ jobs:
       run: vcpkg install zlib:x64-windows plog:x64-windows
 
     - name: Configure CMake
-      # 1. -DWIN32: Forces the code to enter the #ifdef WIN32 blocks
-      # 2. -DCMAKE_CXX_FLAGS: Adds the workspace root so "morph_dict/common/utilit.h" is found
       run: >
         cmake -S morph_dict -B build -A x64 
         -DCMAKE_BUILD_TYPE=Release 
         -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
         -DWIN32=ON
-        -DCMAKE_CXX_FLAGS="/I${{ github.workspace }} /DWIN32"
-        -DCMAKE_C_FLAGS="/I${{ github.workspace }} /DWIN32"
-
+        -DCMAKE_CXX_FLAGS="/I${{ github.workspace }} /DWIN32 /utf-8 /EHsc"
+        -DCMAKE_C_FLAGS="/I${{ github.workspace }} /DWIN32 /utf-8"
+        
     - name: Build
       run: cmake --build build --config Release
 
