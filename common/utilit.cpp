@@ -14,12 +14,11 @@
 #include <plog/Initializers/RollingFileInitializer.h>
 #include <plog/Initializers/ConsoleInitializer.h>
 
-
-
 // for MessageBox
 #ifdef WIN32
 	#define NOMINMAX 
 	#include "windows.h"
+    #define localtime_r(timer, result) (localtime_s(result, timer) == 0 ? result : NULL)
 #endif
 
 bool FileExists (const char *FName)
