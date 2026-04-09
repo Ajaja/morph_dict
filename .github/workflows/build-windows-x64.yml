@@ -34,4 +34,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: morph_dict-windows-x64
-        path: build/Release/
+        path: build/
