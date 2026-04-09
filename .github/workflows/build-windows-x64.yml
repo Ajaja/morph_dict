@@ -20,14 +20,13 @@ jobs:
       run: vcpkg install zlib:x64-windows plog:x64-windows
 
     - name: Configure CMake
-      # We run cmake from the workspace root, pointing to the 'morph_dict' subdir
       run: >
         cmake -S morph_dict -B build -A x64 
         -DCMAKE_BUILD_TYPE=Release 
         -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
-        -DCMAKE_CXX_FLAGS="/I ${{ github.workspace }}"
-        -DCMAKE_C_FLAGS="/I ${{ github.workspace }}"
-
+        -DCMAKE_CXX_FLAGS="/I${{ github.workspace }} /Dlocaltime_r(a,b)=localtime_s(b,a)"
+        -DCMAKE_C_FLAGS="/I${{ github.workspace }} /Dlocaltime_r(a,b)=localtime_s(b,a)"
+        
     - name: Build
       run: cmake --build build --config Release
 
